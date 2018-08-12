@@ -8,32 +8,57 @@
   gather_facts: False
 
   vars:
-#   Assumes that both aws_access_key_id & aws_secret_access_key 
-#   environment variables are set on ansible controller
-    aws_key_id: "{{ lookup('env', 'aws_access_key_id') }}"
-    aws_secret_key: "{{ lookup('env', 'aws_secret_access_key') }}"
+          #   Assumes that both aws_access_key_id & aws_secret_access_key 
+          #   environment variables are set on ansible controller
+
+          aws_id: "{{ lookup('env', 'aws_access_key_id') }}"
+          aws_key: "{{ lookup('env', 'aws_secret_access_key') }}"
+          ubuntu16_04: ami-529fb82a
 
   tasks:
-    - name: Create Cuckoo Security Group
-      ec2_group:
-        name: Cuckoo_Security_Group
-        description: Default Security Group for initial Cuckoo Setup
-        vpc_id: 
-        region: us-west-2
-        rules:
-        
-    - name: Provision set of instances
-      ec2: 
-        aws_access_key: "{{ aws_key_id }}"
-        aws_secret_key: "{{ aws_secret_key }}"
-        key_name: cuckoo-metal
-        region: us-west-2
-        instance_type: t2.micro
-        image: ami-529fb82a
-        wait: true
-        exact_count: 5
-        count_tag:
-            Name: Demo
-        instance_tags:
-            Name: Demo
-      register: ec2
+          - name: Create Cuckoo VPC
+            ec2_vpc_net:
+                    name: cuckoo-vpc
+                    aws_access_key: "{{ aws_id }}"
+                    aws_secret_key: "{{ aws_key }}"
+                    cidr_block: 10.0.0.0/24
+                    dns_hostnames: yes
+                    dns_support: yes
+                    region: us-west-2
+                    state: present
+                    tenancy: dedicated
+                    tags:
+                            name: cuckoo-vpc-net
+                            environment: development
+
+          - name: Create Cuckoo Security Group
+            ec2_group:
+                    aws_access_key: "{{ aws_id }}"
+                    aws_secret_key: "{{ aws_key }}"
+                    name: Cuckoo_Security_Group
+                    description: Default Security Group for initial Cuckoo Setup
+                    vpc_id: "{{ ec2_vpc_net.id }}"
+                    region: us-west-2
+                    state: present
+                    rules:
+                            - proto: tcp
+                              ports:
+                                      - 22
+                    cider_ip: 0.0.0.0/0
+                    rule_desc: Allow SSH from anywhere
+
+           - name: Provision set of instances
+             ec2:
+                     aws_access_key: "{{ aws_id }}"
+                     aws_secret_key: "{{ aws_key }}"
+                     key_name: cuckoo-metal
+                     region: us-west-2
+                     instance_type: t2.micro
+                     image: "{{ ubuntu16_04 }}"
+                     wait: true
+                     exact_count: 5
+                     count_tag:
+                             Name: Demo
+                     instance_tags:
+                             Name: Demo
+             register: ec2
