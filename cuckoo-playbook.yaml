@@ -57,9 +57,10 @@
                     state: present
                     rules:
                             - proto: tcp
-                              ports:
-                                      - 22
-                              cider_ip: 0.0.0.0/0
+                              group_name: SSH-Admin
+                              from_port: 22
+                              to_port: 22
+                              cidr_ip: 0.0.0.0/0
                               rule_desc: Allow SSH from anywhere
             register: ec2_group
           - debug: var=ec2_group
