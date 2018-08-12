@@ -14,6 +14,14 @@
     aws_secret_key: "{{ lookup('env', 'aws_secret_access_key') }}"
 
   tasks:
+    - name: Create Cuckoo Security Group
+      ec2_group:
+        name: Cuckoo_Security_Group
+        description: Default Security Group for initial Cuckoo Setup
+        vpc_id: 
+        region: us-west-2
+        rules:
+        
     - name: Provision set of instances
       ec2: 
         aws_access_key: "{{ aws_key_id }}"
