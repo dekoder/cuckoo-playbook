@@ -28,7 +28,6 @@
                     dns_support: yes
                     region: us-west-2
                     state: present
-                    tenancy: dedicated
                     tags:
                             environment: development
             register: ec2_vpc_net
@@ -43,7 +42,7 @@
                     filters:
                             "tag:name": cuckoo-vpc-net
             register: ec2_vpc_net_facts
-            
+
           - debug: var=ec2_vpc_net_facts.vpcs[0].id
 
           - name: Create Cuckoo Security Group
@@ -61,7 +60,7 @@
                               from_port: 22
                               to_port: 22
                               cidr_ip: 0.0.0.0/0
-                              rule_desc: Allow SSH from anywhere
+                              rule_desc: SSH Admin Rule
             register: ec2_group
           - debug: var=ec2_group
 
