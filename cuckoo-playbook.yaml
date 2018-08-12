@@ -1,0 +1,30 @@
+# Cuckoo Playbook For AWS Deployment
+# Author: @real_slacker007
+# Obscurity Labs LLC
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+#   Assumes that both aws_access_key_id & aws_secret_access_key 
+#   environment variables are set on ansible controller
+    aws_key_id: "{{ lookup('env', 'aws_access_key_id') }}"
+    aws_secret_key: "{{ lookup('env', 'aws_secret_access_key') }}"
+
+  tasks:
+    - name: Provision set of instances
+      ec2: 
+        aws_access_key: "{{ aws_key_id }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        key_name: cuckoo-metal
+        region: us-west-2
+        instance_type: t2.micro
+        image: ami-529fb82a
+        wait: true
+        exact_count: 5
+        count_tag:
+            Name: Demo
+        instance_tags:
+            Name: Demo
+      register: ec2
