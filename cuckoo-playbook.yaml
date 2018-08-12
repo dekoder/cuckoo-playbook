@@ -58,8 +58,8 @@
                             - proto: tcp
                               ports:
                                       - 22
-                    cider_ip: 0.0.0.0/0
-                    rule_desc: Allow SSH from anywhere
+                              cider_ip: 0.0.0.0/0
+                              rule_desc: Allow SSH from anywhere
 
           - name: Provision set of instances
             ec2:
