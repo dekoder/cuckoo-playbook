@@ -1,6 +1,7 @@
 # Cuckoo Playbook For AWS Deployment
 # Author: @real_slacker007
 # Obscurity Labs LLC
+# ANSIBLE VERION [ansible 2.6.2]
 
 - hosts: localhost
   connection: local
