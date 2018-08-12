@@ -29,7 +29,6 @@
                     state: present
                     tenancy: dedicated
                     tags:
-                            name: cuckoo-vpc-net
                             environment: development
             register: ec2_vpc_net
           - name: Gather Cuckoo VPC Info
