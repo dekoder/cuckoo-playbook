@@ -43,9 +43,8 @@
                     filters:
                             "tag:name": cuckoo-vpc-net
             register: ec2_vpc_net_facts
-
             
-          - debug: var=ec2_vpc_net_facts
+          - debug: var=ec2_vpc_net_facts.vpcs[0].id
 
           - name: Create Cuckoo Security Group
             ec2_group:
@@ -53,7 +52,7 @@
                     aws_secret_key: "{{ aws_key }}"
                     name: Cuckoo_Security_Group
                     description: Default Security Group for initial Cuckoo Setup
-                    vpc_id: "{{ ec2_vpc_net.vpc.id }}"
+                    vpc_id: "{{ ec2_vpc_net_facts.vpcs[0].id }}"
                     region: us-west-2
                     state: present
                     rules:
@@ -63,7 +62,7 @@
                               cider_ip: 0.0.0.0/0
                               rule_desc: Allow SSH from anywhere
             register: ec2_group
-          - debug: var2=ec2_group
+          - debug: var=ec2_group
 
           - name: Provision set of instances
             ec2:
