@@ -56,8 +56,6 @@
                     state: present
                     rules:
                             - proto: tcp
-                              group_name: SSH-Admin
-                              group_desc: SSH access for admins
                               from_port: 22
                               to_port: 22
                               cidr_ip: 0.0.0.0/0
@@ -71,12 +69,17 @@
                      aws_secret_key: "{{ aws_key }}"
                      key_name: cuckoo-metal
                      region: us-west-2
-                     instance_type: t2.micro
+                     instance_type: i3.metal
+                     assign_public_ip: true
+                     vpc_subnet_id: subnet-ba3c8bf1
+                     ebs_optimized: true
+                     group_id: sg-0b4df1e9c91d835fe
+                     instance_initiated_shutdown_behavior: stop
+                     state: present
                      image: "{{ ubuntu16_04 }}"
                      wait: true
-                     exact_count: 5
                      count_tag:
-                             Name: Demo
+                             Name: Test-Cuckoo
                      instance_tags:
-                             Name: Demo
+                             Name: Test-Cuckoo
             register: ec2
