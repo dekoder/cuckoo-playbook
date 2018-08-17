@@ -70,16 +70,15 @@
                      key_name: cuckoo-metal
                      region: us-west-2
                      instance_type: i3.metal
-                     assign_public_ip: true
-                     vpc_subnet_id: subnet-ba3c8bf1
-                     ebs_optimized: true
-                     group_id: sg-0b4df1e9c91d835fe
-                     instance_initiated_shutdown_behavior: stop
-                     state: present
+                     #ebs_optimized: true
+                     #vpc_id: vpc-0f934b4d4582de4ef
+                     #group_id: sg-0b4df1e9c91d835fe
+                     #instance_initiated_shutdown_behavior: stop
+                     #state: present
                      image: "{{ ubuntu16_04 }}"
-                     wait: true
-                     count_tag:
-                             Name: Test-Cuckoo
-                     instance_tags:
-                             Name: Test-Cuckoo
+                     #wait: true
+                     #count_tag:
+                     #        Name: Test-Cuckoo
+                     #instance_tags:
+                     #        Name: Test-Cuckoo
             register: ec2
