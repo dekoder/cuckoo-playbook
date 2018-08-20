@@ -70,15 +70,20 @@
                      key_name: cuckoo-metal
                      region: us-west-2
                      instance_type: i3.metal
-                     #ebs_optimized: true
-                     #vpc_id: vpc-0f934b4d4582de4ef
-                     #group_id: sg-0b4df1e9c91d835fe
-                     #instance_initiated_shutdown_behavior: stop
-                     #state: present
                      image: "{{ ubuntu16_04 }}"
-                     #wait: true
-                     #count_tag:
-                     #        Name: Test-Cuckoo
-                     #instance_tags:
-                     #        Name: Test-Cuckoo
+                     instance_tags:
+                             iname: i3metal
+
             register: ec2
+          - debug: var=ec2
+          - name: sleep for 500 seconds and then continue
+            wait_for: timeout=300
+            connection: localhost
+
+          - ec2_instance_facts:
+                  filters:
+                          "tag:iname": i3metal
+            register: ec2_instance_facts
+          - debug: var=ec2_instance_facts
+            #- name: Add I3.Metal Public IP to host group
+            #add_host: hostname={{ item.public_ip }} groups=i3server

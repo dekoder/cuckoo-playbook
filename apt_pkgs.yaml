@@ -1,0 +1,7 @@
+# apt_pkgs.yaml
+- name: install python
+  apt: name={{ item }} state=installed
+  with_items:
+          - python
+          - python-pip
+          - python-dev
